@@ -1,0 +1,5 @@
+{
+  "userJwtSecret": "instant_ink",
+  "cipherKey": "2dac871a90d3c047e1eae8f866dbea18",
+  "cipherIv": "44c578c654ac29c6"
+}
