@@ -16,6 +16,7 @@ module.exports = (req, res, next) => {
         User.findOne({ email: decoded.email }, (err, doc) => {
           if (!err && doc) {
             if (token === doc.token) {
+              req.uid = doc._id
               req.email = decoded.email
               next()
             } else {
