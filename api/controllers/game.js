@@ -17,6 +17,11 @@ module.exports = {
     res.send(game.getState())
   },
 
+  end: (req, res) => {
+    client.del(req.uid.toString())
+    res.sendStatus(200)
+  },
+
   getState: (req, res) => {
     client.get(req.uid.toString(), (err, state) => {
       if (!err) {
@@ -44,19 +49,25 @@ module.exports = {
             newState = game.dispatch(actions.insurance())
             break
           case 'double':
-            newState = game.dispatch(actions.double())
+            newState = game.dispatch(
+              actions.double({ position: req.params.option })
+            )
             break
           case 'split':
             newState = game.dispatch(actions.split())
             break
           case 'hit':
-            newState = game.dispatch(actions.hit({ position: 'right' }))
+            newState = game.dispatch(
+              actions.hit({ position: req.params.option })
+            )
             break
           case 'stand':
-            newState = game.dispatch(actions.stand())
+            newState = game.dispatch(
+              actions.stand({ position: req.params.option })
+            )
             break
           default:
-            res.sendStatus(400)
+            res.sendStatus(404)
         }
 
         client.set(req.uid.toString(), JSON.stringify(newState))

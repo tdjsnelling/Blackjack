@@ -32,11 +32,15 @@ router
   .get(game.start)
 router
   .use(auth)
+  .route('/game/end')
+  .get(game.end)
+router
+  .use(auth)
   .route('/game/state')
   .get(game.getState)
 router
   .use(auth)
-  .route('/game/action/:action')
+  .route('/game/action/:action/:option?')
   .get(game.doAction)
 
 module.exports = router
