@@ -13,8 +13,9 @@ const client = redis.createClient()
 module.exports = {
   start: (req, res) => {
     const game = new Game()
-    client.set(req.uid.toString(), JSON.stringify(game.getState()))
-    res.send(game.getState())
+    const afterDealState = game.dispatch(actions.deal())
+    client.set(req.uid.toString(), JSON.stringify(afterDealState))
+    res.send(afterDealState)
   },
 
   end: (req, res) => {
@@ -41,9 +42,6 @@ module.exports = {
         switch (req.params.action) {
           case 'restore':
             newState = game.dispatch(actions.restore())
-            break
-          case 'deal':
-            newState = game.dispatch(actions.deal())
             break
           case 'insurance':
             newState = game.dispatch(actions.insurance())
