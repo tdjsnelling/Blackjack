@@ -24,6 +24,10 @@ router
   .route('/identity/password/reset/verify')
   .post(identity.verifyPasswordResetToken)
 router.route('/identity/password/reset').post(identity.resetPassword)
+router
+  .use(auth)
+  .route('/identity/balance')
+  .get(identity.getBalance)
 
 // Game
 router

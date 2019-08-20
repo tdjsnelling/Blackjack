@@ -39,10 +39,6 @@ hr {
   justify-content: space-between;
   align-items: center;
 
-  @media screen and (min-width: $mq--tablet) {
-    margin-bottom: 40px;
-  }
-
   .ProfileControls {
     p {
       display: inline-block;

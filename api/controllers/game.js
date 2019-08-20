@@ -3,6 +3,7 @@ const blackjack = require('engine-blackjack')
 const actions = blackjack.actions
 const Game = blackjack.Game
 const redis = require('redis')
+const User = require('../schema/user')
 
 mongoose.connect(`mongodb://${process.env.DB_HOST}/Bitcoin21`, {
   useNewUrlParser: true
@@ -68,6 +69,35 @@ module.exports = {
             break
           default:
             res.sendStatus(404)
+        }
+
+        if (newState.stage === 'done') {
+          User.findOne({ email: req.email }, (err, doc) => {
+            if (!err) {
+              if (doc) {
+                let newBalance =
+                  doc.balance + newState.wonOnLeft + newState.wonOnRight
+
+                if (newState.wonOnLeft === 0 && newState.wonOnRight === 0) {
+                  newBalance -= newState.finalBet
+                }
+
+                User.findOneAndUpdate(
+                  { email: req.email },
+                  { $set: { balance: newBalance } },
+                  (err, doc) => {
+                    if (err || !doc) {
+                      res.sendStatus(500)
+                    }
+                  }
+                )
+              } else {
+                res.sendStatus(404)
+              }
+            } else {
+              res.sendStatus(500)
+            }
+          })
         }
 
         client.set(req.uid.toString(), JSON.stringify(newState))

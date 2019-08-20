@@ -14,7 +14,7 @@ class Blackjack extends React.PureComponent {
     this.state = {
       gameState: null,
       currentHand: 'right',
-      balance: 1000,
+      balance: 0,
       outcome: null
     }
     this.cookies = new Cookies()
@@ -22,6 +22,20 @@ class Blackjack extends React.PureComponent {
     this.startGame = this.startGame.bind(this)
     this.performAction = this.performAction.bind(this)
     this.playAgain = this.playAgain.bind(this)
+  }
+
+  componentDidMount() {
+    fetch(`${process.env.REACT_APP_API_BASE}/api/identity/balance`, {
+      headers: {
+        Authorization: this.props.token
+      }
+    }).then(response => {
+      if (response.ok) {
+        response.json().then(body => {
+          this.setState({ balance: body.balance })
+        })
+      }
+    })
   }
 
   handleLogout() {
