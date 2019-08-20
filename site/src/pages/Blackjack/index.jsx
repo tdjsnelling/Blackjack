@@ -3,6 +3,7 @@ import Cookies from 'universal-cookie'
 import Layout from '../../components/Layout'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
+import Modal from '../../components/Modal'
 
 import styles from './Blackjack.module.scss'
 
@@ -112,19 +113,26 @@ class Blackjack extends React.PureComponent {
   render() {
     const { gameState, balance, currentHand, outcome } = this.state
     return (
-      <Layout title="" balance={balance}>
-        {outcome && <h1 className={styles.Outcome}>{outcome}</h1>}
+      <Layout title="Play" balance={balance}>
         {(!gameState || gameState.stage === 'done') && (
-          <form className={styles.BetForm} onSubmit={this.startGame}>
-            <Input
-              type="number"
-              name="bet"
-              label="Place bet"
-              defaultValue="50"
-              required
-            />
-            <Button>Deal</Button>
-          </form>
+          <Modal>
+            {outcome && (
+              <>
+                <h1 className={styles.Outcome}>{outcome}</h1>
+                <h3 className={styles.PlayAgain}>Play again?</h3>
+              </>
+            )}
+            <form className={styles.BetForm} onSubmit={this.startGame}>
+              <Input
+                type="number"
+                name="bet"
+                label="Place bet to play"
+                defaultValue="50"
+                required
+              />
+              <Button>Deal</Button>
+            </form>
+          </Modal>
         )}
         {gameState && (
           <>
