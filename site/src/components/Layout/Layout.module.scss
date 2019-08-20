@@ -33,14 +33,14 @@ hr {
 }
 
 .Nav {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   color: $color--grey;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   @media screen and (min-width: $mq--tablet) {
-    margin-bottom: 80px;
+    margin-bottom: 40px;
   }
 
   .ProfileControls {

@@ -45,8 +45,7 @@ class Blackjack extends React.PureComponent {
       if (response.ok) {
         response.json().then(body => {
           this.setState({
-            gameState: body,
-            balance: this.state.balance - bet
+            gameState: body
           })
         })
       }
@@ -72,12 +71,37 @@ class Blackjack extends React.PureComponent {
           }
 
           if (body.stage === 'done') {
+            let outcome = ''
+
+            if (body.wonOnLeft + body.wonOnRight > body.finalBet) {
+              outcome += '🎉 You won!'
+
+              if (body.handInfo[this.state.currentHand].playerHasBlackjack) {
+                outcome += ' You got blackjack.'
+              } else if (body.dealerHasBusted) {
+                outcome += ' The dealer went bust.'
+              }
+            } else if (body.wonOnLeft + body.wonOnRight === body.finalBet) {
+              outcome += '➡️ Push'
+            } else {
+              outcome += '😓 You lost.'
+
+              if (body.dealerHasBlackjack) {
+                outcome += ' The dealer got blackjack.'
+              } else if (
+                body.handInfo[this.state.currentHand].playerHasBusted
+              ) {
+                outcome += ' You went bust.'
+              }
+            }
+
             this.setState({
-              balance: this.state.balance + body.wonOnLeft + body.wonOnRight,
-              outcome:
-                body.wonOnLeft + body.wonOnRight > body.finalBet
-                  ? 'Win'
-                  : 'Lose'
+              balance:
+                this.state.balance +
+                body.wonOnLeft +
+                body.wonOnRight -
+                body.finalBet,
+              outcome: outcome
             })
           }
         })
@@ -89,13 +113,14 @@ class Blackjack extends React.PureComponent {
     const { gameState, balance, currentHand, outcome } = this.state
     return (
       <Layout title="" balance={balance}>
+        {outcome && <h1 className={styles.Outcome}>{outcome}</h1>}
         {(!gameState || gameState.stage === 'done') && (
           <form className={styles.BetForm} onSubmit={this.startGame}>
             <Input
               type="number"
               name="bet"
               label="Place bet"
-              defaultValue="20"
+              defaultValue="50"
               required
             />
             <Button>Deal</Button>
@@ -103,34 +128,37 @@ class Blackjack extends React.PureComponent {
         )}
         {gameState && (
           <>
-            {outcome && <h1>{outcome}</h1>}
-            <div className={styles.ActionButtonGroup}>
-              {Object.keys(
-                gameState.handInfo[currentHand].availableActions
-              ).map(
-                (action, i) =>
-                  gameState.handInfo[currentHand].availableActions[action] && (
-                    <Button
-                      key={i}
-                      onClick={() =>
-                        this.performAction(
-                          action,
-                          action === 'hit' ||
-                            action === 'stand' ||
-                            action === 'double'
-                            ? currentHand
-                            : null
-                        )
-                      }
-                    >
-                      {action}
-                    </Button>
-                  )
-              )}
-            </div>
+            {gameState.stage !== 'done' && (
+              <div className={styles.ActionButtonGroup}>
+                {Object.keys(
+                  gameState.handInfo[currentHand].availableActions
+                ).map(
+                  (action, i) =>
+                    gameState.handInfo[currentHand].availableActions[
+                      action
+                    ] && (
+                      <Button
+                        key={i}
+                        onClick={() =>
+                          this.performAction(
+                            action,
+                            action === 'hit' ||
+                              action === 'stand' ||
+                              action === 'double'
+                              ? currentHand
+                              : null
+                          )
+                        }
+                      >
+                        {action}
+                      </Button>
+                    )
+                )}
+              </div>
+            )}
             <div className={styles.CardGroup}>
               <h2>
-                Dealer{' '}
+                Dealer’s hand{' '}
                 {gameState.dealerValue.hi === gameState.dealerValue.lo
                   ? `(${gameState.dealerValue.hi})`
                   : `(${gameState.dealerValue.lo}/${gameState.dealerValue.hi})`}
@@ -161,7 +189,7 @@ class Blackjack extends React.PureComponent {
             </div>
             <div className={styles.CardGroup}>
               <h2>
-                {currentHand} hand{' '}
+                Your hand{' '}
                 {gameState.handInfo[currentHand].playerValue.hi ===
                 gameState.handInfo[currentHand].playerValue.lo
                   ? `(${gameState.handInfo[currentHand].playerValue.hi})`
@@ -179,9 +207,13 @@ class Blackjack extends React.PureComponent {
                 )
               })}
             </div>
-            {/* <hr />
-            <h2>Full state</h2>
-            <pre>{JSON.stringify(gameState, null, 2)}</pre>*/}
+            {process.env.DEBUG && (
+              <>
+                <hr />
+                <h2>Full state</h2>
+                <pre>{JSON.stringify(gameState, null, 2)}</pre>
+              </>
+            )}
           </>
         )}
       </Layout>

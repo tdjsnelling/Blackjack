@@ -1,12 +1,16 @@
 @import '../../scss/vars.scss';
 
+.Outcome {
+  margin-bottom: 40px;
+}
+
 .BetForm {
   margin-bottom: 40px;
 }
 
 .ActionButtonGroup {
   display: grid;
-  grid-template-columns: 20% 20% 20% 20% 20%;
+  grid-template-columns: repeat(5, 1fr);
   grid-column-gap: 10px;
   margin-bottom: 20px;
 
