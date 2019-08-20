@@ -8,6 +8,12 @@ class Landing extends React.PureComponent {
     this.handleLogin = this.handleLogin.bind(this)
   }
 
+  componentDidMount() {
+    if (this.cookies.get('token')) {
+      this.props.history.push('/blackjack')
+    }
+  }
+
   handleLogin(e) {
     e.preventDefault()
     const form = new FormData(e.target)
