@@ -30,6 +30,41 @@ class Blackjack extends React.PureComponent {
     this.props.history.push('/')
   }
 
+  checkForFinish(state) {
+    if (state.stage === 'done') {
+      let outcome = ''
+
+      if (state.wonOnLeft + state.wonOnRight > state.finalBet) {
+        outcome += '🎉 You won!'
+
+        if (state.handInfo[this.state.currentHand].playerHasBlackjack) {
+          outcome += ' You got blackjack.'
+        } else if (state.dealerHasBusted) {
+          outcome += ' The dealer went bust.'
+        }
+      } else if (state.wonOnLeft + state.wonOnRight === state.finalBet) {
+        outcome += '➡️ Push'
+      } else {
+        outcome += '😓 You lost.'
+
+        if (state.dealerHasBlackjack) {
+          outcome += ' The dealer got blackjack.'
+        } else if (state.handInfo[this.state.currentHand].playerHasBusted) {
+          outcome += ' You went bust.'
+        }
+      }
+
+      this.setState({
+        balance:
+          this.state.balance +
+          state.wonOnLeft +
+          state.wonOnRight -
+          state.finalBet,
+        outcome: outcome
+      })
+    }
+  }
+
   startGame(e) {
     e.preventDefault()
     const form = new FormData(e.target)
@@ -51,6 +86,8 @@ class Blackjack extends React.PureComponent {
           this.setState({
             gameState: body
           })
+
+          this.checkForFinish(body)
         })
       }
     })
@@ -74,40 +111,7 @@ class Blackjack extends React.PureComponent {
             this.setState({ currentHand: body.stage.split('-')[2] })
           }
 
-          if (body.stage === 'done') {
-            let outcome = ''
-
-            if (body.wonOnLeft + body.wonOnRight > body.finalBet) {
-              outcome += '🎉 You won!'
-
-              if (body.handInfo[this.state.currentHand].playerHasBlackjack) {
-                outcome += ' You got blackjack.'
-              } else if (body.dealerHasBusted) {
-                outcome += ' The dealer went bust.'
-              }
-            } else if (body.wonOnLeft + body.wonOnRight === body.finalBet) {
-              outcome += '➡️ Push'
-            } else {
-              outcome += '😓 You lost.'
-
-              if (body.dealerHasBlackjack) {
-                outcome += ' The dealer got blackjack.'
-              } else if (
-                body.handInfo[this.state.currentHand].playerHasBusted
-              ) {
-                outcome += ' You went bust.'
-              }
-            }
-
-            this.setState({
-              balance:
-                this.state.balance +
-                body.wonOnLeft +
-                body.wonOnRight -
-                body.finalBet,
-              outcome: outcome
-            })
-          }
+          this.checkForFinish(body)
         })
       }
     })
@@ -149,6 +153,37 @@ class Blackjack extends React.PureComponent {
         )}
         {gameState && (
           <>
+            <div className={styles.CardGroup}>
+              <h2>
+                Dealer’s hand{' '}
+                {gameState.dealerValue.hi === gameState.dealerValue.lo
+                  ? `(${gameState.dealerValue.hi})`
+                  : `(${gameState.dealerValue.lo}/${gameState.dealerValue.hi})`}
+              </h2>
+              {gameState.dealerHoleCard &&
+                !gameState.dealerCards.filter(
+                  x =>
+                    x.text === gameState.dealerHoleCard.text &&
+                    x.suite === gameState.dealerHoleCard.suite
+                ).length && (
+                  <img
+                    className={styles.Card}
+                    src={`/asset/image/card/B${gameState.dealerHoleCard.color}.svg`}
+                    alt="Card 1B"
+                  />
+                )}
+              {gameState.dealerCards.map((card, i) => {
+                const cardId = card.text + card.suite.toUpperCase()[0]
+                return (
+                  <img
+                    className={styles.Card}
+                    src={`/asset/image/card/${cardId}.svg`}
+                    alt={`Card ${cardId}`}
+                    key={i}
+                  />
+                )
+              })}
+            </div>
             {gameState.stage !== 'done' && (
               <div className={styles.ActionButtonGroup}>
                 {Object.keys(
@@ -177,37 +212,6 @@ class Blackjack extends React.PureComponent {
                 )}
               </div>
             )}
-            <div className={styles.CardGroup}>
-              <h2>
-                Dealer’s hand{' '}
-                {gameState.dealerValue.hi === gameState.dealerValue.lo
-                  ? `(${gameState.dealerValue.hi})`
-                  : `(${gameState.dealerValue.lo}/${gameState.dealerValue.hi})`}
-              </h2>
-              {gameState.dealerHoleCard &&
-                !gameState.dealerCards.filter(
-                  x =>
-                    x.text === gameState.dealerHoleCard.text &&
-                    x.suite === gameState.dealerHoleCard.suite
-                ).length && (
-                  <img
-                    className={styles.Card}
-                    src={`/asset/image/card/1B.svg`}
-                    alt="Card 1B"
-                  />
-                )}
-              {gameState.dealerCards.map((card, i) => {
-                const cardId = card.text + card.suite.toUpperCase()[0]
-                return (
-                  <img
-                    className={styles.Card}
-                    src={`/asset/image/card/${cardId}.svg`}
-                    alt={`Card ${cardId}`}
-                    key={i}
-                  />
-                )
-              })}
-            </div>
             {gameState.handInfo.left.cards && gameState.handInfo.right.cards ? (
               <div className={styles.CardGroupGrid}>
                 <div
