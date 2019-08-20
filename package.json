@@ -1,0 +1,15 @@
+{
+  "name": "Bitcoin21",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/tdjsnelling/Bitcoin21.git",
+  "author": "Tom Snelling <tomsnelling8@gmail.com>",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "eslint": "^6.2.0",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.14.3",
+    "prettier": "^1.18.2"
+  }
+}
