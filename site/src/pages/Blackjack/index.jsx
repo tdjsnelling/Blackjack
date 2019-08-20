@@ -1,6 +1,8 @@
 import React from 'react'
 import Cookies from 'universal-cookie'
-import _ from 'underscore'
+import Layout from '../../components/Layout'
+import Input from '../../components/Input'
+import Button from '../../components/Button'
 
 import styles from './Blackjack.module.scss'
 
@@ -86,56 +88,78 @@ class Blackjack extends React.PureComponent {
   render() {
     const { gameState, balance, currentHand, outcome } = this.state
     return (
-      <>
-        <h1>Bitcoin21</h1>
-        <p>Balance: {balance}</p>
-        <button onClick={this.handleLogout}>Log out</button>
-        <hr />
+      <Layout title="" balance={balance}>
         {(!gameState || gameState.stage === 'done') && (
-          <form onSubmit={this.startGame}>
-            <input
+          <form className={styles.BetForm} onSubmit={this.startGame}>
+            <Input
               type="number"
               name="bet"
-              placeholder="Bet"
+              label="Place bet"
               defaultValue="20"
               required
             />
-            <button>Start game</button>
+            <Button>Deal</Button>
           </form>
         )}
         {gameState && (
           <>
             {outcome && <h1>{outcome}</h1>}
-            <h2>
-              Dealer{' '}
-              {gameState.dealerValue.hi === gameState.dealerValue.lo
-                ? `(${gameState.dealerValue.hi})`
-                : `(${gameState.dealerValue.lo}/${gameState.dealerValue.hi})`}
-            </h2>
-            {gameState.dealerHoleCard &&
-              !gameState.dealerCards.filter(
-                x =>
-                  x.text === gameState.dealerHoleCard.text &&
-                  x.suite === gameState.dealerHoleCard.suite
-              ).length && (
-                <img
-                  className={styles.Card}
-                  src={`/asset/image/card/1B.svg`}
-                  alt="Card 1B"
-                />
+            <div className={styles.ActionButtonGroup}>
+              {Object.keys(
+                gameState.handInfo[currentHand].availableActions
+              ).map(
+                (action, i) =>
+                  gameState.handInfo[currentHand].availableActions[action] && (
+                    <Button
+                      key={i}
+                      onClick={() =>
+                        this.performAction(
+                          action,
+                          action === 'hit' ||
+                            action === 'stand' ||
+                            action === 'double'
+                            ? currentHand
+                            : null
+                        )
+                      }
+                    >
+                      {action}
+                    </Button>
+                  )
               )}
-            {gameState.dealerCards.map((card, i) => {
-              const cardId = card.text + card.suite.toUpperCase()[0]
-              return (
-                <img
-                  className={styles.Card}
-                  src={`/asset/image/card/${cardId}.svg`}
-                  alt={`Card ${cardId}`}
-                  key={i}
-                />
-              )
-            })}
-            <>
+            </div>
+            <div className={styles.CardGroup}>
+              <h2>
+                Dealer{' '}
+                {gameState.dealerValue.hi === gameState.dealerValue.lo
+                  ? `(${gameState.dealerValue.hi})`
+                  : `(${gameState.dealerValue.lo}/${gameState.dealerValue.hi})`}
+              </h2>
+              {gameState.dealerHoleCard &&
+                !gameState.dealerCards.filter(
+                  x =>
+                    x.text === gameState.dealerHoleCard.text &&
+                    x.suite === gameState.dealerHoleCard.suite
+                ).length && (
+                  <img
+                    className={styles.Card}
+                    src={`/asset/image/card/1B.svg`}
+                    alt="Card 1B"
+                  />
+                )}
+              {gameState.dealerCards.map((card, i) => {
+                const cardId = card.text + card.suite.toUpperCase()[0]
+                return (
+                  <img
+                    className={styles.Card}
+                    src={`/asset/image/card/${cardId}.svg`}
+                    alt={`Card ${cardId}`}
+                    key={i}
+                  />
+                )
+              })}
+            </div>
+            <div className={styles.CardGroup}>
               <h2>
                 {currentHand} hand{' '}
                 {gameState.handInfo[currentHand].playerValue.hi ===
@@ -154,35 +178,13 @@ class Blackjack extends React.PureComponent {
                   />
                 )
               })}
-              {Object.keys(
-                gameState.handInfo[currentHand].availableActions
-              ).map(
-                (action, i) =>
-                  gameState.handInfo[currentHand].availableActions[action] && (
-                    <button
-                      key={i}
-                      onClick={() =>
-                        this.performAction(
-                          action,
-                          action === 'hit' ||
-                            action === 'stand' ||
-                            action === 'double'
-                            ? currentHand
-                            : null
-                        )
-                      }
-                    >
-                      {action}
-                    </button>
-                  )
-              )}
-            </>
-            <hr />
+            </div>
+            {/* <hr />
             <h2>Full state</h2>
-            <pre>{JSON.stringify(gameState, null, 2)}</pre>
+            <pre>{JSON.stringify(gameState, null, 2)}</pre>*/}
           </>
         )}
-      </>
+      </Layout>
     )
   }
 }

@@ -1,0 +1,21 @@
+@import '../../scss/vars.scss';
+
+.Label {
+  font-size: 16px;
+}
+
+.Input {
+  font-size: 18px;
+  padding: 12px 18px;
+  margin: 10px 0 20px;
+  border: 0;
+  background-color: $color--grey--lightest;
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  border-radius: 4px;
+
+  &:focus {
+    outline: 0;
+  }
+}

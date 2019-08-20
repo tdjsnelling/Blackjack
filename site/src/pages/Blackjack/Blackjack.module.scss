@@ -1,3 +1,31 @@
+@import '../../scss/vars.scss';
+
+.BetForm {
+  margin-bottom: 40px;
+}
+
+.ActionButtonGroup {
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+  grid-column-gap: 10px;
+  margin-bottom: 20px;
+
+  button {
+    width: 100%;
+  }
+}
+
+.CardGroup {
+  background: $color--grey--lightest;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+
+  h2 {
+    margin-bottom: 20px;
+  }
+}
+
 .Card {
   width: 120px;
   animation: cardEnter 100ms linear;

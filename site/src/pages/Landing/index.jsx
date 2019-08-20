@@ -1,5 +1,8 @@
 import React from 'react'
 import Cookies from 'universal-cookie'
+import Layout from '../../components/Layout'
+import Input from '../../components/Input'
+import Button from '../../components/Button'
 
 class Landing extends React.PureComponent {
   constructor() {
@@ -39,19 +42,15 @@ class Landing extends React.PureComponent {
 
   render() {
     return (
-      <>
+      <Layout>
         <h1>Bitcoin21</h1>
+        <hr />
         <form onSubmit={this.handleLogin}>
-          <input type="email" name="email" placeholder="Email" required />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            required
-          />
-          <button>Log in</button>
+          <Input type="email" name="email" label="Email" required />
+          <Input type="password" name="password" label="Password" required />
+          <Button>Log in</Button>
         </form>
-      </>
+      </Layout>
     )
   }
 }

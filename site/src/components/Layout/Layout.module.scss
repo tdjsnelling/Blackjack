@@ -1,0 +1,80 @@
+@import '../../scss/vars.scss';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  line-height: 100%;
+}
+
+body {
+  font-family: $font--opensans;
+  -webkit-font-smoothing: antialiased;
+  color: $color--black;
+}
+
+code,
+pre {
+  font-family: $font--sourcecode;
+}
+
+hr {
+  border: 0;
+  display: block;
+  height: 2px;
+  background: $color--grey--lightest;
+  margin: 40px 0;
+}
+
+.Layout {
+  color: $color--black;
+  min-height: calc(100vh);
+  position: relative;
+}
+
+.Nav {
+  margin-bottom: 40px;
+  color: $color--grey;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  @media screen and (min-width: $mq--tablet) {
+    margin-bottom: 80px;
+  }
+
+  .ProfileControls {
+    p {
+      display: inline-block;
+    }
+
+    button {
+      color: $color--grey;
+      text-decoration: underline;
+      border: 0;
+      font-size: 16px;
+      cursor: pointer;
+      outline: 0;
+      font-family: $font--opensans;
+      background: none;
+    }
+
+    & > * + * {
+      margin-left: 20px;
+    }
+  }
+}
+
+.Home {
+  color: $color--grey;
+}
+
+.PageContent {
+  padding: 20px 20px 80px;
+  width: 100%;
+
+  @media screen and (min-width: $mq--tablet) {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+}
