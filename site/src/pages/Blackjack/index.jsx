@@ -10,7 +10,8 @@ class Blackjack extends React.PureComponent {
     this.state = {
       gameState: null,
       currentHand: 'right',
-      balance: 1000
+      balance: 1000,
+      outcome: null
     }
     this.cookies = new Cookies()
     this.handleLogout = this.handleLogout.bind(this)
@@ -31,6 +32,8 @@ class Blackjack extends React.PureComponent {
     if (bet > this.state.balance) {
       return false
     }
+
+    this.setState({ outcome: null })
 
     fetch(`${process.env.REACT_APP_API_BASE}/api/game/start/${bet}`, {
       headers: {
@@ -68,11 +71,11 @@ class Blackjack extends React.PureComponent {
 
           if (body.stage === 'done') {
             this.setState({
-              balance:
-                this.state.balance +
-                body.finalBet +
-                body.wonOnLeft +
-                body.wonOnRight
+              balance: this.state.balance + body.wonOnLeft + body.wonOnRight,
+              outcome:
+                body.wonOnLeft + body.wonOnRight > body.finalBet
+                  ? 'Win'
+                  : 'Lose'
             })
           }
         })
@@ -81,7 +84,7 @@ class Blackjack extends React.PureComponent {
   }
 
   render() {
-    const { gameState, balance, currentHand } = this.state
+    const { gameState, balance, currentHand, outcome } = this.state
     return (
       <>
         <h1>Bitcoin21</h1>
@@ -100,7 +103,13 @@ class Blackjack extends React.PureComponent {
         </form>
         {gameState && (
           <>
-            <h2>Dealer</h2>
+            {outcome && <h1>{outcome}</h1>}
+            <h2>
+              Dealer{' '}
+              {gameState.dealerValue.hi === gameState.dealerValue.lo
+                ? `(${gameState.dealerValue.hi})`
+                : `(${gameState.dealerValue.lo}/${gameState.dealerValue.hi})`}
+            </h2>
             {gameState.dealerHoleCard &&
               !gameState.dealerCards.filter(
                 x =>
@@ -124,9 +133,14 @@ class Blackjack extends React.PureComponent {
                 />
               )
             })}
-            <pre>{JSON.stringify(gameState.dealerValue, null, 2)}</pre>
             <>
-              <h2>{currentHand} hand</h2>
+              <h2>
+                {currentHand} hand{' '}
+                {gameState.handInfo[currentHand].playerValue.hi ===
+                gameState.handInfo[currentHand].playerValue.lo
+                  ? `(${gameState.handInfo[currentHand].playerValue.hi})`
+                  : `(${gameState.handInfo[currentHand].playerValue.lo}/${gameState.handInfo[currentHand].playerValue.hi})`}
+              </h2>
               {gameState.handInfo[currentHand].cards.map((card, i) => {
                 const cardId = card.text + card.suite.toUpperCase()[0]
                 return (
@@ -138,13 +152,6 @@ class Blackjack extends React.PureComponent {
                   />
                 )
               })}
-              <pre>
-                {JSON.stringify(
-                  gameState.handInfo[currentHand].playerValue,
-                  null,
-                  2
-                )}
-              </pre>
               <h3>Actions</h3>
               {Object.keys(
                 gameState.handInfo[currentHand].availableActions
@@ -179,6 +186,7 @@ class Blackjack extends React.PureComponent {
                       'hits',
                       'wonOnLeft',
                       'wonOnRight',
+                      'finalBet',
                       'dealerHasBlackjack',
                       'dealerHasBusted'
                     ),
