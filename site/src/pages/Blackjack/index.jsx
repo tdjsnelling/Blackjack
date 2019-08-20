@@ -1,11 +1,16 @@
 import React from 'react'
 import Cookies from 'universal-cookie'
+import _ from 'underscore'
+
+import styles from './Blackjack.module.scss'
 
 class Blackjack extends React.PureComponent {
   constructor() {
     super()
     this.state = {
-      gameState: null
+      gameState: null,
+      currentHand: 'right',
+      balance: 1000
     }
     this.cookies = new Cookies()
     this.handleLogout = this.handleLogout.bind(this)
@@ -18,15 +23,26 @@ class Blackjack extends React.PureComponent {
     this.props.history.push('/')
   }
 
-  startGame() {
-    fetch(`${process.env.REACT_APP_API_BASE}/api/game/start`, {
+  startGame(e) {
+    e.preventDefault()
+    const form = new FormData(e.target)
+    const bet = form.get('bet')
+
+    if (bet > this.state.balance) {
+      return false
+    }
+
+    fetch(`${process.env.REACT_APP_API_BASE}/api/game/start/${bet}`, {
       headers: {
         Authorization: this.props.token
       }
     }).then(response => {
       if (response.ok) {
         response.json().then(body => {
-          this.setState({ gameState: body })
+          this.setState({
+            gameState: body,
+            balance: this.state.balance - bet
+          })
         })
       }
     })
@@ -45,111 +61,127 @@ class Blackjack extends React.PureComponent {
       if (response.ok) {
         response.json().then(body => {
           this.setState({ gameState: body })
+
+          if (body.stage.startsWith('player-turn-')) {
+            this.setState({ currentHand: body.stage.split('-')[2] })
+          }
+
+          if (body.stage === 'done') {
+            this.setState({
+              balance:
+                this.state.balance +
+                body.finalBet +
+                body.wonOnLeft +
+                body.wonOnRight
+            })
+          }
         })
       }
     })
   }
 
   render() {
-    const { gameState } = this.state
+    const { gameState, balance, currentHand } = this.state
     return (
       <>
         <h1>Bitcoin21</h1>
+        <p>Balance: {balance}</p>
         <button onClick={this.handleLogout}>Log out</button>
         <hr />
-        <button onClick={this.startGame}>Start game</button>
+        <form onSubmit={this.startGame}>
+          <input
+            type="number"
+            name="bet"
+            placeholder="Bet"
+            defaultValue="20"
+            required
+          />
+          <button>Start game</button>
+        </form>
         {gameState && (
           <>
-            {gameState.stage === 'player-turn-right' && (
-              <>
-                <h2>Right hand</h2>
-                <h3>Value</h3>
-                <pre>
-                  {JSON.stringify(
-                    gameState.handInfo.right.playerValue,
-                    null,
-                    2
-                  )}
-                </pre>
-                <h3>Cards</h3>
-                <pre>
-                  {JSON.stringify(gameState.handInfo.right.cards, null, 2)}
-                </pre>
-                <h3>Actions</h3>
-                {Object.keys(gameState.handInfo.right.availableActions).map(
-                  (action, i) =>
-                    gameState.handInfo.right.availableActions[action] && (
-                      <button
-                        key={i}
-                        onClick={() =>
-                          this.performAction(
-                            action,
-                            action === 'hit' ||
-                              action === 'stand' ||
-                              action === 'double'
-                              ? 'right'
-                              : null
-                          )
-                        }
-                      >
-                        {action}
-                      </button>
-                    )
+            <h2>Dealer</h2>
+            {gameState.dealerHoleCard &&
+              !gameState.dealerCards.filter(
+                x =>
+                  x.text === gameState.dealerHoleCard.text &&
+                  x.suite === gameState.dealerHoleCard.suite
+              ).length && (
+                <img
+                  className={styles.Card}
+                  src={`/asset/image/card/1B.svg`}
+                  alt="Card 1B"
+                />
+              )}
+            {gameState.dealerCards.map((card, i) => {
+              const cardId = card.text + card.suite.toUpperCase()[0]
+              return (
+                <img
+                  className={styles.Card}
+                  src={`/asset/image/card/${cardId}.svg`}
+                  alt={`Card ${cardId}`}
+                  key={i}
+                />
+              )
+            })}
+            <pre>{JSON.stringify(gameState.dealerValue, null, 2)}</pre>
+            <>
+              <h2>{currentHand} hand</h2>
+              {gameState.handInfo[currentHand].cards.map((card, i) => {
+                const cardId = card.text + card.suite.toUpperCase()[0]
+                return (
+                  <img
+                    className={styles.Card}
+                    src={`/asset/image/card/${cardId}.svg`}
+                    alt={`Card ${cardId}`}
+                    key={i}
+                  />
+                )
+              })}
+              <pre>
+                {JSON.stringify(
+                  gameState.handInfo[currentHand].playerValue,
+                  null,
+                  2
                 )}
-              </>
-            )}
-            {gameState.stage === 'player-turn-left' && (
-              <>
-                <h2>Left hand</h2>
-                <h3>Value</h3>
-                <pre>
-                  {JSON.stringify(gameState.handInfo.left.playerValue, null, 2)}
-                </pre>
-                <h3>Cards</h3>
-                <pre>
-                  {JSON.stringify(gameState.handInfo.left.cards, null, 2)}
-                </pre>
-                <h3>Actions</h3>
-                {Object.keys(gameState.handInfo.left.availableActions).map(
-                  (action, i) =>
-                    gameState.handInfo.left.availableActions[action] && (
-                      <button
-                        key={i}
-                        onClick={() =>
-                          this.performAction(
-                            action,
-                            action === 'hit' ||
-                              action === 'stand' ||
-                              action === 'double'
-                              ? 'left'
-                              : null
-                          )
-                        }
-                      >
-                        {action}
-                      </button>
-                    )
-                )}
-              </>
-            )}
+              </pre>
+              <h3>Actions</h3>
+              {Object.keys(
+                gameState.handInfo[currentHand].availableActions
+              ).map(
+                (action, i) =>
+                  gameState.handInfo[currentHand].availableActions[action] && (
+                    <button
+                      key={i}
+                      onClick={() =>
+                        this.performAction(
+                          action,
+                          action === 'hit' ||
+                            action === 'stand' ||
+                            action === 'double'
+                            ? currentHand
+                            : null
+                        )
+                      }
+                    >
+                      {action}
+                    </button>
+                  )
+              )}
+            </>
             {gameState.stage === 'done' && (
               <>
                 <h2>Outcome</h2>
                 <pre>
                   {JSON.stringify(
-                    (({
-                      hits,
-                      wonOnLeft,
-                      wonOnRight,
-                      dealerHasBlackjack,
-                      dealerHasBusted
-                    }) => ({
-                      hits,
-                      wonOnLeft,
-                      wonOnRight,
-                      dealerHasBlackjack,
-                      dealerHasBusted
-                    }))(gameState),
+                    _.pick(
+                      gameState,
+                      'hits',
+                      'wonOnLeft',
+                      'wonOnRight',
+                      'dealerHasBlackjack',
+                      'dealerHasBusted'
+                    ),
                     null,
                     2
                   )}
@@ -165,10 +197,6 @@ class Blackjack extends React.PureComponent {
                     null,
                     2
                   )}
-                </pre>
-                <h3>Dealer</h3>
-                <pre>
-                  <pre>{JSON.stringify(gameState.dealerValue, null, 2)}</pre>
                 </pre>
               </>
             )}

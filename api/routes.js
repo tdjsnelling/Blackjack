@@ -28,7 +28,7 @@ router.route('/identity/password/reset').post(identity.resetPassword)
 // Game
 router
   .use(auth)
-  .route('/game/start')
+  .route('/game/start/:bet')
   .get(game.start)
 router
   .use(auth)

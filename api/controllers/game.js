@@ -13,7 +13,9 @@ const client = redis.createClient()
 module.exports = {
   start: (req, res) => {
     const game = new Game()
-    const afterDealState = game.dispatch(actions.deal())
+    const afterDealState = game.dispatch(
+      actions.deal({ bet: parseInt(req.params.bet) })
+    )
     client.set(req.uid.toString(), JSON.stringify(afterDealState))
     res.send(afterDealState)
   },

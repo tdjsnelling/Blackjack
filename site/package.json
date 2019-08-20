@@ -7,10 +7,12 @@
   "author": "Tom Snelling",
   "license": "UNLICENSED",
   "dependencies": {
+    "node-sass": "^4.12.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
+    "underscore": "^1.9.1",
     "universal-cookie": "^4.0.2"
   },
   "scripts": {
