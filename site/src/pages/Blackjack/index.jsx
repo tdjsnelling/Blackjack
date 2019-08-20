@@ -91,16 +91,18 @@ class Blackjack extends React.PureComponent {
         <p>Balance: {balance}</p>
         <button onClick={this.handleLogout}>Log out</button>
         <hr />
-        <form onSubmit={this.startGame}>
-          <input
-            type="number"
-            name="bet"
-            placeholder="Bet"
-            defaultValue="20"
-            required
-          />
-          <button>Start game</button>
-        </form>
+        {(!gameState || gameState.stage === 'done') && (
+          <form onSubmit={this.startGame}>
+            <input
+              type="number"
+              name="bet"
+              placeholder="Bet"
+              defaultValue="20"
+              required
+            />
+            <button>Start game</button>
+          </form>
+        )}
         {gameState && (
           <>
             {outcome && <h1>{outcome}</h1>}
@@ -152,7 +154,6 @@ class Blackjack extends React.PureComponent {
                   />
                 )
               })}
-              <h3>Actions</h3>
               {Object.keys(
                 gameState.handInfo[currentHand].availableActions
               ).map(
@@ -176,38 +177,6 @@ class Blackjack extends React.PureComponent {
                   )
               )}
             </>
-            {gameState.stage === 'done' && (
-              <>
-                <h2>Outcome</h2>
-                <pre>
-                  {JSON.stringify(
-                    _.pick(
-                      gameState,
-                      'hits',
-                      'wonOnLeft',
-                      'wonOnRight',
-                      'finalBet',
-                      'dealerHasBlackjack',
-                      'dealerHasBusted'
-                    ),
-                    null,
-                    2
-                  )}
-                </pre>
-                <h3>Left hand</h3>
-                <pre>
-                  {JSON.stringify(gameState.handInfo.left.playerValue, null, 2)}
-                </pre>
-                <h3>Right hand</h3>
-                <pre>
-                  {JSON.stringify(
-                    gameState.handInfo.right.playerValue,
-                    null,
-                    2
-                  )}
-                </pre>
-              </>
-            )}
             <hr />
             <h2>Full state</h2>
             <pre>{JSON.stringify(gameState, null, 2)}</pre>

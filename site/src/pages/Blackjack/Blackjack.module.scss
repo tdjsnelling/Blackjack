@@ -1,7 +1,19 @@
 .Card {
   width: 120px;
+  animation: cardEnter 100ms linear;
 
   & + & {
     margin-left: 10px;
+  }
+}
+
+@keyframes cardEnter {
+  0% {
+    transform: translateY(-20%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
   }
 }
