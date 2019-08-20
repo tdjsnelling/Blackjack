@@ -1,5 +1,6 @@
 import React from 'react'
 import Cookies from 'universal-cookie'
+import classnames from 'classnames'
 import Layout from '../../components/Layout'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
@@ -207,30 +208,88 @@ class Blackjack extends React.PureComponent {
                 )
               })}
             </div>
-            <div className={styles.CardGroup}>
-              <h2>
-                Your hand{' '}
-                {gameState.handInfo[currentHand].playerValue.hi ===
-                gameState.handInfo[currentHand].playerValue.lo
-                  ? `(${gameState.handInfo[currentHand].playerValue.hi})`
-                  : `(${gameState.handInfo[currentHand].playerValue.lo}/${gameState.handInfo[currentHand].playerValue.hi})`}
-              </h2>
-              {gameState.handInfo[currentHand].cards.map((card, i) => {
-                const cardId = card.text + card.suite.toUpperCase()[0]
-                return (
-                  <img
-                    className={styles.Card}
-                    src={`/asset/image/card/${cardId}.svg`}
-                    alt={`Card ${cardId}`}
-                    key={i}
-                  />
-                )
-              })}
-            </div>
-            {process.env.DEBUG && (
+            {gameState.handInfo.left.cards && gameState.handInfo.right.cards ? (
+              <div className={styles.CardGroupGrid}>
+                <div
+                  className={classnames(
+                    styles.CardGroup,
+                    gameState.stage.startsWith('player-turn-') &&
+                      gameState.stage !== 'player-turn-left' &&
+                      styles.disabled
+                  )}
+                >
+                  <h2>
+                    Your hand{' '}
+                    {gameState.handInfo.left.playerValue.hi ===
+                    gameState.handInfo.left.playerValue.lo
+                      ? `(${gameState.handInfo.left.playerValue.hi})`
+                      : `(${gameState.handInfo.left.playerValue.lo}/${gameState.handInfo.left.playerValue.hi})`}
+                  </h2>
+                  {gameState.handInfo.left.cards.map((card, i) => {
+                    const cardId = card.text + card.suite.toUpperCase()[0]
+                    return (
+                      <img
+                        className={styles.Card}
+                        src={`/asset/image/card/${cardId}.svg`}
+                        alt={`Card ${cardId}`}
+                        key={i}
+                      />
+                    )
+                  })}
+                </div>
+                <div
+                  className={classnames(
+                    styles.CardGroup,
+                    gameState.stage.startsWith('player-turn-') &&
+                      gameState.stage !== 'player-turn-right' &&
+                      styles.disabled
+                  )}
+                >
+                  <h2>
+                    Your hand{' '}
+                    {gameState.handInfo.right.playerValue.hi ===
+                    gameState.handInfo.right.playerValue.lo
+                      ? `(${gameState.handInfo.right.playerValue.hi})`
+                      : `(${gameState.handInfo.right.playerValue.lo}/${gameState.handInfo.right.playerValue.hi})`}
+                  </h2>
+                  {gameState.handInfo.right.cards.map((card, i) => {
+                    const cardId = card.text + card.suite.toUpperCase()[0]
+                    return (
+                      <img
+                        className={styles.Card}
+                        src={`/asset/image/card/${cardId}.svg`}
+                        alt={`Card ${cardId}`}
+                        key={i}
+                      />
+                    )
+                  })}
+                </div>
+              </div>
+            ) : (
+              <div className={styles.CardGroup}>
+                <h2>
+                  Your hand{' '}
+                  {gameState.handInfo[currentHand].playerValue.hi ===
+                  gameState.handInfo[currentHand].playerValue.lo
+                    ? `(${gameState.handInfo[currentHand].playerValue.hi})`
+                    : `(${gameState.handInfo[currentHand].playerValue.lo}/${gameState.handInfo[currentHand].playerValue.hi})`}
+                </h2>
+                {gameState.handInfo[currentHand].cards.map((card, i) => {
+                  const cardId = card.text + card.suite.toUpperCase()[0]
+                  return (
+                    <img
+                      className={styles.Card}
+                      src={`/asset/image/card/${cardId}.svg`}
+                      alt={`Card ${cardId}`}
+                      key={i}
+                    />
+                  )
+                })}
+              </div>
+            )}
+            {process.env.REACT_APP_DEBUG === 'true' && (
               <>
                 <hr />
-                <h2>Full state</h2>
                 <pre>{JSON.stringify(gameState, null, 2)}</pre>
               </>
             )}
