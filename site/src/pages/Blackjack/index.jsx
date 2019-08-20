@@ -14,12 +14,14 @@ class Blackjack extends React.PureComponent {
       gameState: null,
       currentHand: 'right',
       balance: 1000,
-      outcome: null
+      outcome: null,
+      dismissedModal: false
     }
     this.cookies = new Cookies()
     this.handleLogout = this.handleLogout.bind(this)
     this.startGame = this.startGame.bind(this)
     this.performAction = this.performAction.bind(this)
+    this.dismissModal = this.dismissModal.bind(this)
   }
 
   handleLogout() {
@@ -110,12 +112,22 @@ class Blackjack extends React.PureComponent {
     })
   }
 
+  dismissModal() {
+    this.setState({ dismissedModal: true })
+  }
+
   render() {
-    const { gameState, balance, currentHand, outcome } = this.state
+    const {
+      gameState,
+      balance,
+      currentHand,
+      outcome,
+      dismissedModal
+    } = this.state
     return (
       <Layout title="Play" balance={balance}>
-        {(!gameState || gameState.stage === 'done') && (
-          <Modal>
+        {(!gameState || gameState.stage === 'done') && !dismissedModal && (
+          <Modal toggle={this.dismissModal}>
             {outcome && (
               <>
                 <h1 className={styles.Outcome}>{outcome}</h1>

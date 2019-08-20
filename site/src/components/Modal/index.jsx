@@ -4,9 +4,9 @@ import styles from './Modal.module.scss'
 
 class Modal extends React.PureComponent {
   render() {
-    const { children, toggleFunction } = this.props
+    const { children, toggle } = this.props
     return (
-      <div className={styles.Overlay} onClick={toggleFunction}>
+      <div className={styles.Overlay} onClick={toggle}>
         <div className={styles.Modal} onClick={e => e.stopPropagation()}>
           {children}
         </div>
