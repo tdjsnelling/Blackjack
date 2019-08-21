@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const config = require('../config.json')
 const User = require('../schema/user')
 
-mongoose.connect(`mongodb://${process.env.DB_HOST}/Bitcoin21`, {
+mongoose.connect(`mongodb://${process.env.DB_HOST}/21satoshi`, {
   useNewUrlParser: true
 })
 

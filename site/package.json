@@ -1,8 +1,8 @@
 {
-  "name": "Bitcoin21-site",
+  "name": "21satoshi-site",
   "version": "1.0.0",
   "private": true,
-  "description": "Bitcoin21 frontend",
+  "description": "21satoshi frontend",
   "main": "index.js",
   "author": "Tom Snelling",
   "license": "UNLICENSED",

@@ -5,7 +5,7 @@ const Game = blackjack.Game
 const redis = require('redis')
 const User = require('../schema/user')
 
-mongoose.connect(`mongodb://${process.env.DB_HOST}/Bitcoin21`, {
+mongoose.connect(`mongodb://${process.env.DB_HOST}/21satoshi`, {
   useNewUrlParser: true
 })
 

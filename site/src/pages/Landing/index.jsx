@@ -43,7 +43,7 @@ class Landing extends React.PureComponent {
   render() {
     return (
       <Layout title="Log in">
-        <h1>Bitcoin21</h1>
+        <h1>21satoshi</h1>
         <hr />
         <form onSubmit={this.handleLogin}>
           <Input type="email" name="email" label="Email" required />

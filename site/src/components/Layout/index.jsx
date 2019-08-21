@@ -33,10 +33,10 @@ class Layout extends React.PureComponent {
     return (
       <div className={styles.Layout}>
         <Helmet>
-          <title>{title ? `${title} | Bitcoin21` : 'Bitcoin21'}</title>
+          <title>{title ? `${title} | 21satoshi` : '21satoshi'}</title>
           <meta
             property="og:title"
-            content={title ? `${title} | Bitcoin21` : 'Bitcoin21'}
+            content={title ? `${title} | 21satoshi` : '21satoshi'}
           />
           <meta
             property="description"
@@ -53,7 +53,7 @@ class Layout extends React.PureComponent {
             {loggedIn && (
               <>
                 <Link to="/" className={styles.Home}>
-                  Bitcoin21
+                  21satoshi
                 </Link>
                 <div className={styles.ProfileControls}>
                   <p>Balance: {numeral(balance).format('0,0')}</p>

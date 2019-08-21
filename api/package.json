@@ -1,7 +1,7 @@
 {
-  "name": "Bitcoin21-api",
+  "name": "21satoshi-api",
   "version": "1.0.0",
-  "description": "Bitcoin21 backend",
+  "description": "21satoshi backend",
   "main": "index.js",
   "author": "Tom Snelling",
   "license": "UNLICENSED",

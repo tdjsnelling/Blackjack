@@ -1,8 +1,8 @@
 {
-  "name": "Bitcoin21",
+  "name": "21satoshi",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/tdjsnelling/Bitcoin21.git",
+  "repository": "https://github.com/tdjsnelling/21satoshi.git",
   "author": "Tom Snelling <tomsnelling8@gmail.com>",
   "license": "UNLICENSED",
   "devDependencies": {
