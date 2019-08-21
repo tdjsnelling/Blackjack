@@ -1,8 +1,8 @@
 import React from 'react'
 import Cookies from 'universal-cookie'
 import classnames from 'classnames'
+import numeral from 'numeral'
 import Layout from '../../components/Layout'
-import Input from '../../components/Input'
 import Button from '../../components/Button'
 import Modal from '../../components/Modal'
 
@@ -15,13 +15,19 @@ class Blackjack extends React.PureComponent {
       gameState: null,
       currentHand: 'right',
       balance: 0,
-      outcome: null
+      availableBalance: 0,
+      outcome: null,
+      valueToBet: 0,
+      denominationsToBet: []
     }
+    this.denominations = [10000, 25000, 50000, 100000, 250000, 500000, 1000000]
     this.cookies = new Cookies()
     this.handleLogout = this.handleLogout.bind(this)
     this.startGame = this.startGame.bind(this)
     this.performAction = this.performAction.bind(this)
     this.playAgain = this.playAgain.bind(this)
+    this.addToBet = this.addToBet.bind(this)
+    this.clearBet = this.clearBet.bind(this)
   }
 
   componentDidMount() {
@@ -32,7 +38,10 @@ class Blackjack extends React.PureComponent {
     }).then(response => {
       if (response.ok) {
         response.json().then(body => {
-          this.setState({ balance: body.balance })
+          this.setState({
+            balance: body.balance,
+            availableBalance: body.balance
+          })
         })
       }
     })
@@ -85,7 +94,7 @@ class Blackjack extends React.PureComponent {
     const form = new FormData(e.target)
     const bet = form.get('bet')
 
-    if (bet > this.state.balance) {
+    if (bet > this.state.balance || bet <= 0) {
       return false
     }
 
@@ -138,22 +147,82 @@ class Blackjack extends React.PureComponent {
     })
   }
 
+  addToBet(amount) {
+    const denominationsToBet = [...this.state.denominationsToBet]
+    denominationsToBet.push(amount)
+    this.setState({
+      valueToBet: this.state.valueToBet + amount,
+      availableBalance: this.state.availableBalance - amount,
+      denominationsToBet: denominationsToBet
+    })
+  }
+
+  clearBet() {
+    this.setState({
+      valueToBet: 0,
+      availableBalance: this.state.balance,
+      denominationsToBet: []
+    })
+  }
+
   render() {
-    const { gameState, balance, currentHand } = this.state
+    const {
+      gameState,
+      balance,
+      availableBalance,
+      currentHand,
+      valueToBet,
+      denominationsToBet
+    } = this.state
     return (
       <Layout title="Play" balance={balance}>
         {!gameState && (
           <Modal toggle={this.dismissModal}>
             <h1>New bet</h1>
             <form className={styles.BetForm} onSubmit={this.startGame}>
-              <Input
-                type="number"
+              <input
+                style={{ display: 'none' }}
                 name="bet"
-                label="Place bet to play"
-                defaultValue="50"
+                value={valueToBet}
+                readOnly
                 required
               />
-              <Button>Deal</Button>
+              <div className={styles.TotalBet}>
+                <h2>{numeral(valueToBet).format('0,0')} sat</h2>
+                <Button type="button" onClick={this.clearBet}>
+                  Clear
+                </Button>
+              </div>
+              <div className={styles.CardGroup}>
+                {denominationsToBet.map((denomination, i) => (
+                  <img
+                    className={styles.Chip}
+                    key={i}
+                    src={`/asset/image/chip/${numeral(denomination).format(
+                      '0a'
+                    )}.svg`}
+                    alt=""
+                  />
+                ))}
+              </div>
+              <div className={styles.BetButtonGroup}>
+                {this.denominations.map((denomination, i) => (
+                  <Button
+                    type="button"
+                    key={i}
+                    disabled={availableBalance < denomination}
+                    onClick={() => this.addToBet(denomination)}
+                  >
+                    +{numeral(denomination).format('0a')}
+                  </Button>
+                ))}
+              </div>
+              <Button
+                className={styles.DealButton}
+                disabled={valueToBet > this.state.balance || valueToBet <= 0}
+              >
+                Deal!
+              </Button>
             </form>
           </Modal>
         )}
@@ -204,10 +273,19 @@ class Blackjack extends React.PureComponent {
                     <div className={styles.DoneOverlay}>
                       {gameState.wonOnLeft > 0 ? (
                         <h1 className={styles.OutcomeText}>
-                          🎉 You won! (+{gameState.wonOnLeft})
+                          <span role="img" aria-label="win">
+                            🎉
+                          </span>{' '}
+                          You won! (+
+                          {numeral(gameState.wonOnLeft).format('0,0')})
                         </h1>
                       ) : (
-                        <h1 className={styles.OutcomeText}>😓 You lost</h1>
+                        <h1 className={styles.OutcomeText}>
+                          <span role="img" aria-label="lose">
+                            😓
+                          </span>{' '}
+                          You lost
+                        </h1>
                       )}
                     </div>
                   )}
@@ -242,10 +320,19 @@ class Blackjack extends React.PureComponent {
                     <div className={styles.DoneOverlay}>
                       {gameState.wonOnRight > 0 ? (
                         <h1 className={styles.OutcomeText}>
-                          🎉 You won! (+{gameState.wonOnRight})
+                          <span role="img" aria-label="win">
+                            🎉
+                          </span>{' '}
+                          You won! (+
+                          {numeral(gameState.wonOnRight).format('0,0')})
                         </h1>
                       ) : (
-                        <h1 className={styles.OutcomeText}>😓 You lost</h1>
+                        <h1 className={styles.OutcomeText}>
+                          <span role="img" aria-label="lose">
+                            😓
+                          </span>{' '}
+                          You lost
+                        </h1>
                       )}
                     </div>
                   )}
@@ -275,10 +362,19 @@ class Blackjack extends React.PureComponent {
                   <div className={styles.DoneOverlay}>
                     {gameState.wonOnRight > 0 ? (
                       <h1 className={styles.OutcomeText}>
-                        🎉 You won! (+{gameState.wonOnRight})
+                        <span role="img" aria-label="win">
+                          🎉
+                        </span>{' '}
+                        You won! (+
+                        {numeral(gameState.wonOnRight).format('0,0')})
                       </h1>
                     ) : (
-                      <h1 className={styles.OutcomeText}>😓 You lost</h1>
+                      <h1 className={styles.OutcomeText}>
+                        <span role="img" aria-label="lose">
+                          😓
+                        </span>{' '}
+                        You lost
+                      </h1>
                     )}
                   </div>
                 )}

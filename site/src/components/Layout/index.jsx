@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Cookies from 'universal-cookie'
 import { Helmet } from 'react-helmet'
+import numeral from 'numeral'
 
 import styles from './Layout.module.scss'
 
@@ -55,7 +56,7 @@ class Layout extends React.PureComponent {
                   Bitcoin21
                 </Link>
                 <div className={styles.ProfileControls}>
-                  <p>Balance: {balance}</p>
+                  <p>Balance: {numeral(balance).format('0,0')}</p>
                   <button onClick={this.handleLogout}>Log out</button>
                 </div>
               </>
