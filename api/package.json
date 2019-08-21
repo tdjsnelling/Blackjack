@@ -6,7 +6,7 @@
   "author": "Tom Snelling",
   "license": "UNLICENSED",
   "scripts": {
-    "start": "DB_HOST=localhost nodemon index.js"
+    "start": "nodemon index.js"
   },
   "dependencies": {
     "bcrypt": "^3.0.6",

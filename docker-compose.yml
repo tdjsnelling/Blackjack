@@ -1,0 +1,24 @@
+version: '3.5'
+services:
+  mongo:
+    container_name: 21satoshi-mongo
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - '27017:27017'
+  redis:
+    container_name: 21satoshi-redis
+    image: redis
+    ports:
+      - '6379:6379'
+  api:
+    container_name: 21satoshi-api
+    build: ./api
+    restart: always
+    ports:
+      - '6001:6001'
+    depends_on:
+      - mongo
+      - redis
+    command: ['./wait-for-it.sh', 'mongo:27017', '--', 'npm', 'start']

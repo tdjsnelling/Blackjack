@@ -5,7 +5,8 @@ const crypto = require('crypto')
 const User = require('../schema/user')
 const config = require('../config.json')
 
-mongoose.connect(`mongodb://${process.env.DB_HOST}/21satoshi`, {
+const dbHost = process.env.DOCKER ? '21satoshi-mongo' : 'localhost'
+mongoose.connect(`mongodb://${dbHost}/21satoshi`, {
   useNewUrlParser: true
 })
 

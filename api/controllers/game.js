@@ -5,11 +5,13 @@ const Game = blackjack.Game
 const redis = require('redis')
 const User = require('../schema/user')
 
-mongoose.connect(`mongodb://${process.env.DB_HOST}/21satoshi`, {
+const dbHost = process.env.DOCKER ? '21satoshi-mongo' : 'localhost'
+mongoose.connect(`mongodb://${dbHost}/21satoshi`, {
   useNewUrlParser: true
 })
 
-const client = redis.createClient()
+const redisHost = process.env.DOCKER ? '21satoshi-redis' : 'localhost'
+const client = redis.createClient({ host: redisHost })
 
 module.exports = {
   start: (req, res) => {
