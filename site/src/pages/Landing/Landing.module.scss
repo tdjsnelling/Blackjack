@@ -1,0 +1,29 @@
+@import '../../scss/vars.scss';
+
+.Logotype {
+  font-family: $font--shrikhand;
+  font-weight: normal;
+  font-size: 40px;
+}
+
+.FormGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 40px;
+  background: $color--green;
+  padding: 40px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+
+  form {
+    background: $color--white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  }
+
+  h2 {
+    margin-bottom: 20px;
+  }
+}
