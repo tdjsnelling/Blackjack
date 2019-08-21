@@ -28,6 +28,7 @@ class Blackjack extends React.PureComponent {
     this.playAgain = this.playAgain.bind(this)
     this.addToBet = this.addToBet.bind(this)
     this.clearBet = this.clearBet.bind(this)
+    this.handleHotkey = this.handleHotkey.bind(this)
   }
 
   componentDidMount() {
@@ -44,6 +45,11 @@ class Blackjack extends React.PureComponent {
           })
         })
       }
+    })
+
+    window.addEventListener('keypress', e => {
+      console.log(e)
+      this.handleHotkey(e.key)
     })
   }
 
@@ -98,7 +104,12 @@ class Blackjack extends React.PureComponent {
       return false
     }
 
-    this.setState({ outcome: null })
+    this.setState({
+      outcome: null,
+      valueToBet: 0,
+      availableBalance: this.state.balance,
+      denominationsToBet: []
+    })
 
     fetch(`${process.env.REACT_APP_API_BASE}/api/game/start/${bet}`, {
       headers: {
@@ -163,6 +174,41 @@ class Blackjack extends React.PureComponent {
       availableBalance: this.state.balance,
       denominationsToBet: []
     })
+  }
+
+  handleHotkey(key) {
+    if (this.state.gameState.stage.startsWith('player-turn-')) {
+      switch (key) {
+        case 'h':
+          this.performAction('hit', this.state.currentHand)
+          break
+        case 's':
+          this.performAction('stand', this.state.currentHand)
+          break
+        case 'd':
+          this.performAction('double', this.state.currentHand)
+          break
+        case 'p':
+          this.performAction('split')
+          break
+        case 'u':
+          this.performAction('surrender')
+          break
+        case 'i':
+          this.performAction('insurance')
+          break
+        default:
+          break
+      }
+    } else if (this.state.gameState.stage === 'done') {
+      switch (key) {
+        case ' ':
+          this.playAgain()
+          break
+        default:
+          break
+      }
+    }
   }
 
   render() {
@@ -400,35 +446,47 @@ class Blackjack extends React.PureComponent {
             )}
             {gameState.stage !== 'done' && (
               <div className={styles.ActionButtonGroup}>
-                {Object.keys(
-                  gameState.handInfo[currentHand].availableActions
-                ).map(
-                  (action, i) =>
-                    gameState.handInfo[currentHand].availableActions[
-                      action
-                    ] && (
-                      <Button
-                        key={i}
-                        onClick={() =>
-                          this.performAction(
-                            action,
-                            action === 'hit' ||
-                              action === 'stand' ||
-                              action === 'double'
-                              ? currentHand
-                              : null
-                          )
-                        }
-                      >
-                        {action}
-                      </Button>
-                    )
+                {gameState.handInfo[currentHand].availableActions.hit && (
+                  <Button
+                    onClick={() => this.performAction('hit', currentHand)}
+                  >
+                    Hit (H)
+                  </Button>
+                )}
+                {gameState.handInfo[currentHand].availableActions.stand && (
+                  <Button
+                    onClick={() => this.performAction('stand', currentHand)}
+                  >
+                    Stand (S)
+                  </Button>
+                )}
+                {gameState.handInfo[currentHand].availableActions.double && (
+                  <Button
+                    onClick={() => this.performAction('double', currentHand)}
+                  >
+                    Double (D)
+                  </Button>
+                )}
+                {gameState.handInfo[currentHand].availableActions.split && (
+                  <Button onClick={() => this.performAction('split')}>
+                    Split (P)
+                  </Button>
+                )}
+                {gameState.handInfo[currentHand].availableActions.surrender && (
+                  <Button onClick={() => this.performAction('surrender')}>
+                    Surrender (U)
+                  </Button>
+                )}
+                {gameState.handInfo[currentHand].availableActions.insurance && (
+                  <Button onClick={() => this.performAction('insurance')}>
+                    Insurance (I)
+                  </Button>
                 )}
               </div>
             )}
             {gameState.stage === 'done' && (
               <Button className={styles.PlayAgain} onClick={this.playAgain}>
-                Play again
+                Play again (SPACE)
               </Button>
             )}
             {process.env.REACT_APP_DEBUG === 'true' && (
