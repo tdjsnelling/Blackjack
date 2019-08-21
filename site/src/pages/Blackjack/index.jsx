@@ -193,7 +193,7 @@ class Blackjack extends React.PureComponent {
                   Clear
                 </Button>
               </div>
-              <div className={styles.CardGroup}>
+              <div className={classnames(styles.CardGroup, styles.ChipGroup)}>
                 {denominationsToBet.map((denomination, i) => (
                   <img
                     className={styles.Chip}

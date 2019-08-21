@@ -13,6 +13,11 @@
   justify-content: space-between;
   align-items: flex-end;
   margin-bottom: 20px;
+  font-family: $font--sourcecode;
+}
+
+.ChipGroup {
+  min-height: 142px !important;
 }
 
 .BetButtonGroup {
@@ -52,7 +57,7 @@
   text-align: center;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
   position: relative;
-  min-height: 142px;
+  min-height: 254px;
 
   h2 {
     margin-bottom: 20px;
