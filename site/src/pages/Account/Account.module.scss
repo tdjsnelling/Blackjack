@@ -1,0 +1,28 @@
+@import '../../scss/vars.scss';
+
+.Heading {
+  margin: 40px 0;
+}
+
+.Subheading {
+  margin: 40px 0 20px;
+}
+
+.Balance {
+  font-size: 32px;
+  margin-bottom: 20px;
+
+  span {
+    font-family: $font--sourcecode;
+  }
+}
+
+.ButtonGroup {
+  button + button {
+    margin-left: 10px;
+  }
+}
+
+.SuccessPrompt {
+  margin-top: 20px;
+}

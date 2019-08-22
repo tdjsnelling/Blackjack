@@ -57,6 +57,7 @@ class Layout extends React.PureComponent {
                 </Link>
                 <div className={styles.ProfileControls}>
                   <p>Balance: {numeral(balance).format('0,0')}</p>
+                  <Link to="/account">Account</Link>
                   <button onClick={this.handleLogout}>Log out</button>
                 </div>
               </>

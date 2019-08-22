@@ -10,6 +10,7 @@ import Cookies from 'universal-cookie'
 
 import Landing from './pages/Landing'
 import Blackjack from './pages/Blackjack'
+import Account from './pages/Account'
 
 class ScrollToTop extends React.Component {
   componentDidUpdate(prevProps) {
@@ -79,6 +80,7 @@ class RouterComponent extends React.Component {
           <Switch>
             <Route exact path="/" component={Landing} />
             <PrivateRoute path="/blackjack" component={Blackjack} />
+            <PrivateRoute path="/account" component={Account} />
           </Switch>
         </ScrollToTopComponent>
       </Router>
