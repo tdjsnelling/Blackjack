@@ -49,7 +49,6 @@ class Blackjack extends React.PureComponent {
     })
 
     window.addEventListener('keypress', e => {
-      console.log(e)
       this.handleHotkey(e.key)
     })
   }

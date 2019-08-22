@@ -6,10 +6,8 @@ class Modal extends React.PureComponent {
   render() {
     const { children, toggle } = this.props
     return (
-      <div className={styles.Overlay} onClick={toggle}>
-        <div className={styles.Modal} onClick={e => e.stopPropagation()}>
-          {children}
-        </div>
+      <div className={styles.Modal} onClick={e => e.stopPropagation()}>
+        {children}
       </div>
     )
   }
