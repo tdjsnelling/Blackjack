@@ -5,7 +5,7 @@ const crypto = require('crypto')
 const User = require('../schema/user')
 const config = require('../config.json')
 
-const dbHost = process.env.DOCKER ? 'Blackjack-mongo:27018' : 'localhost'
+const dbHost = process.env.DOCKER ? 'blackjack-mongo:27018' : 'localhost'
 mongoose.connect(`mongodb://${dbHost}/Blackjack`, {
   useNewUrlParser: true
 })

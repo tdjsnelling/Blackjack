@@ -1,19 +1,20 @@
 version: '3.5'
 services:
   mongo:
-    container_name: Blackjack-mongo
+    container_name: blackjack-mongo
     image: mongo
     volumes:
       - ./data:/data/db
     ports:
-      - '27018:27017'
+      - '27018:27018'
+    command: mongod --port 27018
   redis:
-    container_name: Blackjack-redis
+    container_name: blackjack-redis
     image: redis
     ports:
       - '6379:6379'
   api:
-    container_name: Blackjack-api
+    container_name: blackjack-api
     build: ./api
     restart: always
     ports:
@@ -21,4 +22,4 @@ services:
     depends_on:
       - mongo
       - redis
-    command: ['./wait-for-it.sh', 'mongo:27017', '--', 'npm', 'start']
+    command: ['./wait-for-it.sh', 'mongo:27018', '--', 'npm', 'start']

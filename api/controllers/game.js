@@ -3,13 +3,13 @@ const { Game, actions, presets } = require('engine-blackjack')
 const redis = require('redis')
 const User = require('../schema/user')
 
-const dbHost = process.env.DOCKER ? 'Blackjack-mongo:27018' : 'localhost'
+const dbHost = process.env.DOCKER ? 'blackjack-mongo:27018' : 'localhost'
 mongoose.connect(`mongodb://${dbHost}/Blackjack`, {
   useNewUrlParser: true
 })
 
-const redisHost = process.env.DOCKER ? 'Blackjack-redis' : 'localhost'
-const client = redis.createClient({ host: redisHost })
+const redisHost = process.env.DOCKER ? 'blackjack-redis' : 'localhost'
+const client = redis.createClient({ url: `redis://${redisHost}` })
 
 const overrideRules = {
   decks: 6,
