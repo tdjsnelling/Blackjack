@@ -3,7 +3,7 @@ const { Game, actions, presets } = require('engine-blackjack')
 const redis = require('redis')
 const User = require('../schema/user')
 
-const dbHost = process.env.DOCKER ? 'Blackjack-mongo' : 'localhost'
+const dbHost = process.env.DOCKER ? 'Blackjack-mongo:27018' : 'localhost'
 mongoose.connect(`mongodb://${dbHost}/Blackjack`, {
   useNewUrlParser: true
 })

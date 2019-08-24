@@ -6,7 +6,7 @@ services:
     volumes:
       - ./data:/data/db
     ports:
-      - '27017:27017'
+      - '27018:27017'
   redis:
     container_name: Blackjack-redis
     image: redis
