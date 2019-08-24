@@ -14,6 +14,7 @@ class Account extends React.PureComponent {
       passwordChangeSuccess: null
     }
     this.handleChangePassword = this.handleChangePassword.bind(this)
+    this.handleTopup = this.handleTopup.bind(this)
   }
 
   componentDidMount() {
@@ -53,6 +54,22 @@ class Account extends React.PureComponent {
     })
   }
 
+  handleTopup() {
+    fetch(`${process.env.REACT_APP_API_BASE}/api/identity/topup`, {
+      headers: {
+        Authorization: this.props.token
+      }
+    }).then(response => {
+      if (response.ok) {
+        response.json().then(body => {
+          this.setState({
+            balance: body.balance
+          })
+        })
+      }
+    })
+  }
+
   render() {
     const { balance, passwordChangeSuccess } = this.state
     return (
@@ -62,11 +79,10 @@ class Account extends React.PureComponent {
 
         <h2 className={styles.Subheading}>Balance</h2>
         <p className={styles.Balance}>
-          <span>{numeral(balance).format('0,0')}</span> satoshi
+          <span>{numeral(balance).format('0,0')}</span>
         </p>
         <div className={styles.ButtonGroup}>
-          <Button>Deposit</Button>
-          <Button>Withdraw</Button>
+          <Button onClick={this.handleTopup}>Top-up</Button>
         </div>
 
         <h2 className={styles.Subheading}>Change password</h2>

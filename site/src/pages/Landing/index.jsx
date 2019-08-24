@@ -11,6 +11,7 @@ class Landing extends React.PureComponent {
     super()
     this.cookies = new Cookies()
     this.handleLogin = this.handleLogin.bind(this)
+    this.handleRegister = this.handleRegister.bind(this)
   }
 
   componentDidMount() {
@@ -69,7 +70,7 @@ class Landing extends React.PureComponent {
   render() {
     return (
       <Layout title="Log in">
-        <h1 className={styles.Logotype}>21satoshi</h1>
+        <h1 className={styles.Logotype}>Blackjack</h1>
         <hr />
         <div className={styles.FormGrid}>
           <form onSubmit={this.handleLogin}>

@@ -28,6 +28,10 @@ router
   .use(auth)
   .route('/identity/balance')
   .get(identity.getBalance)
+router
+  .use(auth)
+  .route('/identity/topup')
+  .get(identity.topup)
 
 // Game
 router

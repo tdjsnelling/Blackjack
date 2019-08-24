@@ -1,10 +1,10 @@
 {
-  "name": "21satoshi",
+  "name": "Blackjack",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/tdjsnelling/21satoshi.git",
-  "author": "Tom Snelling <tomsnelling8@gmail.com>",
-  "license": "UNLICENSED",
+  "repository": "https://github.com/tdjsnelling/Blackjack.git",
+  "author": "Tom Snelling",
+  "license": "GPL-3.0-or-later",
   "devDependencies": {
     "eslint": "^6.2.0",
     "eslint-config-prettier": "^6.1.0",

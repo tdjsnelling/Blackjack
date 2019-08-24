@@ -1,19 +1,19 @@
 version: '3.5'
 services:
   mongo:
-    container_name: 21satoshi-mongo
+    container_name: Blackjack-mongo
     image: mongo
     volumes:
       - ./data:/data/db
     ports:
       - '27017:27017'
   redis:
-    container_name: 21satoshi-redis
+    container_name: Blackjack-redis
     image: redis
     ports:
       - '6379:6379'
   api:
-    container_name: 21satoshi-api
+    container_name: Blackjack-api
     build: ./api
     restart: always
     ports:

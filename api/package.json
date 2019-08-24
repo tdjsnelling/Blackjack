@@ -1,10 +1,11 @@
 {
-  "name": "21satoshi-api",
+  "name": "Blackjack-api",
   "version": "1.0.0",
-  "description": "21satoshi backend",
+  "description": "Blackjack backend",
   "main": "index.js",
+  "repository": "https://github.com/tdjsnelling/Blackjack.git",
   "author": "Tom Snelling",
-  "license": "UNLICENSED",
+  "license": "GPL-3.0-or-later",
   "scripts": {
     "start": "nodemon index.js"
   },

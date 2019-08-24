@@ -5,8 +5,8 @@ const crypto = require('crypto')
 const User = require('../schema/user')
 const config = require('../config.json')
 
-const dbHost = process.env.DOCKER ? '21satoshi-mongo' : 'localhost'
-mongoose.connect(`mongodb://${dbHost}/21satoshi`, {
+const dbHost = process.env.DOCKER ? 'Blackjack-mongo' : 'localhost'
+mongoose.connect(`mongodb://${dbHost}/Blackjack`, {
   useNewUrlParser: true
 })
 
@@ -29,7 +29,7 @@ module.exports = {
                   name: req.body.name,
                   email: req.body.email,
                   password: hash,
-                  balance: 0,
+                  balance: 10000,
                   token: token
                 })
 
@@ -332,5 +332,24 @@ module.exports = {
         res.sendStatus(500)
       }
     })
+  },
+
+  topup: (req, res) => {
+    User.findOneAndUpdate(
+      { email: req.email },
+      { $inc: { balance: 10000 } },
+      { new: true },
+      (err, doc) => {
+        if (!err) {
+          if (doc) {
+            res.send({ balance: doc.balance })
+          } else {
+            res.sendStatus(404)
+          }
+        } else {
+          res.sendStatus(500)
+        }
+      }
+    )
   }
 }

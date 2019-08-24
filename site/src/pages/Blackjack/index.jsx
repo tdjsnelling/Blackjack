@@ -20,7 +20,7 @@ class Blackjack extends React.PureComponent {
       valueToBet: 0,
       denominationsToBet: []
     }
-    this.denominations = [10000, 25000, 50000, 100000, 250000, 500000, 1000000]
+    this.denominations = [10, 25, 50, 100, 250, 500, 1000]
     this.cookies = new Cookies()
     this.dealButton = React.createRef()
     this.handleLogout = this.handleLogout.bind(this)
@@ -266,7 +266,7 @@ class Blackjack extends React.PureComponent {
                 required
               />
               <div className={styles.TotalBet}>
-                <h2>{numeral(valueToBet).format('0,0')} sat</h2>
+                <h2>{numeral(valueToBet).format('0,0')}</h2>
                 <Button type="button" onClick={this.clearBet}>
                   Clear (C)
                 </Button>

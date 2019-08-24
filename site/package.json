@@ -1,11 +1,11 @@
 {
-  "name": "21satoshi-site",
+  "name": "Blackjack-site",
   "version": "1.0.0",
-  "private": true,
-  "description": "21satoshi frontend",
+  "description": "Blackjack frontend",
   "main": "index.js",
+  "repository": "https://github.com/tdjsnelling/Blackjack.git",
   "author": "Tom Snelling",
-  "license": "UNLICENSED",
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "classnames": "^2.2.6",
     "node-sass": "^4.12.0",

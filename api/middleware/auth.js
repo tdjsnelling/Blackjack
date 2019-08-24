@@ -3,8 +3,8 @@ const mongoose = require('mongoose')
 const config = require('../config.json')
 const User = require('../schema/user')
 
-const dbHost = process.env.DOCKER ? '21satoshi-mongo' : 'localhost'
-mongoose.connect(`mongodb://${dbHost}/21satoshi`, {
+const dbHost = process.env.DOCKER ? 'Blackjack-mongo' : 'localhost'
+mongoose.connect(`mongodb://${dbHost}/Blackjack`, {
   useNewUrlParser: true
 })
 
