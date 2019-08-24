@@ -1,0 +1,56 @@
+{
+  "version": 2,
+  "name": "Blackjack",
+  "builds": [
+    {
+      "src": "site/package.json",
+      "use": "@now/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "headers": {
+        "cache-control": "s-maxage=31536000,immutable"
+      },
+      "dest": "/site/static/$1"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/site/favicon.ico"
+    },
+    {
+      "src": "/favicon.png",
+      "dest": "/site/favicon.png"
+    },
+    {
+      "src": "/asset-manifest.json",
+      "dest": "/site/asset-manifest.json"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/site/manifest.json"
+    },
+    {
+      "src": "/precache-manifest.(.*)",
+      "dest": "/site/precache-manifest.$1"
+    },
+    {
+      "src": "/service-worker.js",
+      "headers": {
+        "cache-control": "s-maxage=0"
+      },
+      "dest": "/site/service-worker.js"
+    },
+    {
+      "src": "/(.*)",
+      "headers": {
+        "cache-control": "s-maxage=0"
+      },
+      "dest": "/site/index.html"
+    }
+  ]
+}
