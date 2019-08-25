@@ -19,6 +19,13 @@
       "dest": "/site/static/$1"
     },
     {
+      "src": "/asset/(.*)",
+      "headers": {
+        "cache-control": "s-maxage=31536000,immutable"
+      },
+      "dest": "/site/asset/$1"
+    },
+    {
       "src": "/favicon.ico",
       "dest": "/site/favicon.ico"
     },
