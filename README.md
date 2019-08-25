@@ -2,7 +2,9 @@
 
 Basic Blackjack game build with React, Express, MongoDB and Redis.
 
-[Demo](https://blackjack.tdjsnelling.now.sh/)
+[Demo →](https://blackjack.tdjsnelling.now.sh/)
+
+![Screenshot](https://imgur.com/SdObiYu.jpg)
 
 I originally built this to be played with Bitcoin, but UK regulations are strict and I didn't fancy jumping through the hoops. It could still be adapted if someone wanted to make the changes.
 
@@ -15,7 +17,7 @@ The game logic is powered by the amazing [engine-blackjack](https://github.com/k
 - Each user creates an account with email address and password.
 - Each account has a unique identifier. This is used to keep track of an accounts current game state.
 - Game state is stored by redis; the `key` is the users identifier, and the `value` is the current game state.
-- All game actions happen on the server. The user makes a request with their identifier and their desired action, the server carries out the action and responds with the new game state.
+- All game actions happen on the server. The user makes a request with their identifier and their desired action, the server fetches the current game state from redis, carries out the action, and then stores and responds with the new game state.
 
 ### Deployment
 
